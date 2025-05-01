@@ -60,7 +60,22 @@ class WarehouseUtils{
 
     }
 }
+
+/**
+ * Wildcards are used only in methods parameters, usually read only(can't safely add)
+ * T Extends are used only in class or methods definition, you can add and read
+ *
+ * Upper Bounded (extends): Restricts to a specific type or its subclasses.
+ * Lower Bounded (super): Restricts to a specific type or its superclasses.
+ * Multiple Bounds (&): Allows specifying multiple constraints, but only one class can be extended.
+ */
 public class SmartWarehouseSystem_2 {
+    private static <T> void sayHey(T name) {
+        System.out.println("Hey "+name);
+    }
+    private static void printList(List<?> myList){
+        System.out.println(myList);
+    }
     public static void main(String[] args) {
         Storage<Electronics> electronicStorage = new Storage<>(); // One shelf for storing only electronics components
         Storage<Groceries> groceriesStorage = new Storage<>();
@@ -73,5 +88,20 @@ public class SmartWarehouseSystem_2 {
         System.out.println(electronicStorage.getItems());
         System.out.println(groceriesStorage.getItems());
         System.out.println(furnitureStorage.getItems());
+
+        sayHey("Praveen");
+        sayHey(new Electronics("tv", "sony"));
+        List<Integer> myList = new ArrayList<>();
+        myList.add(10);
+        myList.add(20);
+        myList.add(30);
+        printList(myList);
+
+        List<String> myList2 = new ArrayList<>();
+        myList2.add("10");
+        myList2.add("20");
+        myList2.add("309");
+        printList(myList2);
+
     }
 }
