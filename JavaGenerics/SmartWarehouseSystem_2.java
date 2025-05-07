@@ -57,7 +57,9 @@ class Storage<T extends WarehouseItem> {
 }
 class WarehouseUtils{
     public static void displayDetails(List<? extends WarehouseItem> items) {
-
+        for (WarehouseItem item: items) {
+            item.showDetails();
+        }
     }
 }
 
@@ -85,9 +87,9 @@ public class SmartWarehouseSystem_2 {
         groceriesStorage.addItems(new Groceries("Apple", "25-05-2025"));
         furnitureStorage.addItems(new Furniture("Bed", "Wood"));
 
-        System.out.println(electronicStorage.getItems());
-        System.out.println(groceriesStorage.getItems());
-        System.out.println(furnitureStorage.getItems());
+        WarehouseUtils.displayDetails(electronicStorage.getItems());
+        WarehouseUtils.displayDetails(groceriesStorage.getItems());
+        WarehouseUtils.displayDetails(furnitureStorage.getItems());
 
         sayHey("Praveen");
         sayHey(new Electronics("tv", "sony"));
