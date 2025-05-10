@@ -47,7 +47,6 @@ public class BufferedVsUnbufferedCopy{
     }
     private static long bufferedCopy(String bufferedDestFile) {
         long startTime = System.nanoTime();
-
         BufferedInputStream fis = null;
         BufferedOutputStream fos = null;
 
