@@ -1,7 +1,7 @@
 public class CheckStringRotation {
     public static void main(String[] args) {
         String str1 = "Thankyou";
-        String str2 = "kyouTha";
+        String str2 = "kyouThan";
         if (isRotation(str1, str2)) {
             System.out.println(str2 + " is a rotation of " + str1);
         } else {
@@ -13,6 +13,7 @@ public class CheckStringRotation {
             return false;
         }
         String combined = s1 + s1;
+        System.out.println(combined);
         return combined.contains(s2);
     }
 }
