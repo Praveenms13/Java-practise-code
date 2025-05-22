@@ -20,7 +20,6 @@ public class StudentController {
 
     @PostMapping("/addStudent")
     public ApiResponse addStudent(@RequestBody Student student) {
-        // Optional: Check for duplicates by email or name
         List<Student> existingStudents = studentRepository.findAll();
         for (Student s : existingStudents) {
             if (s.getName().equalsIgnoreCase(student.getName()) ||
@@ -29,8 +28,8 @@ public class StudentController {
             }
         }
 
-        studentRepository.save(student);
-        return new ApiResponse(true, "Student added successfully");
+        Student savedStudent = studentRepository.save(student);
+        return new ApiResponse(true, "Student added successfully", savedStudent);
     }
 
     @PutMapping("/updateStudent/{id}")
