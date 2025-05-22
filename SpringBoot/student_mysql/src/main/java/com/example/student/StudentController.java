@@ -1,54 +1,60 @@
 package com.example.student;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
 
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/students")
 public class StudentController {
-    private final List<Student> studentList = new ArrayList<>();
-    private int id = 0;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
     @GetMapping("/getAllStudents")
     public List<Student> getAllStudents() {
-        return studentList;
+        return studentRepository.findAll();
     }
+
     @PostMapping("/addStudent")
     public ApiResponse addStudent(@RequestBody Student student) {
-        for  (Student s : studentList) {
-            if (s.getName().equals(student.getName()) || s.getEmail().equals(student.getEmail())) {
+        // Optional: Check for duplicates by email or name
+        List<Student> existingStudents = studentRepository.findAll();
+        for (Student s : existingStudents) {
+            if (s.getName().equalsIgnoreCase(student.getName()) ||
+                    s.getEmail().equalsIgnoreCase(student.getEmail())) {
                 return new ApiResponse(false, "Student already exists");
             }
         }
-        student.setId(++this.id);
-        studentList.add(student);
+
+        studentRepository.save(student);
         return new ApiResponse(true, "Student added successfully");
     }
 
     @PutMapping("/updateStudent/{id}")
     public ApiResponse updateStudent(@PathVariable int id, @RequestBody Student updatedStudent) {
-        for (Student student : studentList) {
-            if (student.getId() == id) {
-                if (updatedStudent.getName() != null) {
-                    student.setName(updatedStudent.getName());
-                }
-                if (updatedStudent.getEmail() != null) {
-                    student.setEmail(updatedStudent.getEmail());
-                }
-                return new ApiResponse(true, "Student updated successfully");
+        Optional<Student> optionalStudent = studentRepository.findById(id);
+        if (optionalStudent.isPresent()) {
+            Student student = optionalStudent.get();
+            if (updatedStudent.getName() != null) {
+                student.setName(updatedStudent.getName());
             }
+            if (updatedStudent.getEmail() != null) {
+                student.setEmail(updatedStudent.getEmail());
+            }
+            studentRepository.save(student);
+            return new ApiResponse(true, "Student updated successfully");
         }
         return new ApiResponse(false, "Student not found");
     }
 
     @DeleteMapping("/deleteStudent/{id}")
     public ApiResponse deleteStudent(@PathVariable int id) {
-        Iterator<Student> iterator = studentList.iterator();
-        while (iterator.hasNext()) {
-            if (iterator.next().getId() == id) {
-                iterator.remove();
-                return new ApiResponse(true, "Student deleted successfully");
-            }
+        if (studentRepository.existsById(id)) {
+            studentRepository.deleteById(id);
+            return new ApiResponse(true, "Student deleted successfully");
         }
         return new ApiResponse(false, "Student not found");
     }
